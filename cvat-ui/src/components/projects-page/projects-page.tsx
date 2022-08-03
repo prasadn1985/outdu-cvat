@@ -10,7 +10,6 @@ import Spin from 'antd/lib/spin';
 
 import { CombinedState, Indexable } from 'reducers/interfaces';
 import { getProjectsAsync, restoreProjectAsync } from 'actions/projects-actions';
-import FeedbackComponent from 'components/feedback/feedback';
 import { updateHistoryFromQuery } from 'components/resource-sorting-filtering';
 import ImportDatasetModal from 'components/import-dataset-modal/import-dataset-modal';
 import EmptyListComponent from './empty-list';
@@ -91,7 +90,6 @@ export default function ProjectsPageComponent(): JSX.Element {
                     <Spin size='large' className='cvat-spinner' />
                 </div>
             ) : content }
-            <FeedbackComponent />
             <ImportDatasetModal />
         </div>
     );

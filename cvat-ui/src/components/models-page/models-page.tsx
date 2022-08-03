@@ -7,7 +7,6 @@ import React from 'react';
 
 import DeployedModelsList from './deployed-models-list';
 import EmptyListComponent from './empty-list';
-import FeedbackComponent from '../feedback/feedback';
 import { Model } from '../../reducers/interfaces';
 
 interface Props {
@@ -27,7 +26,6 @@ export default function ModelsPageComponent(props: Props): JSX.Element {
     return (
         <div className='cvat-models-page'>
             {deployedModels.length ? <DeployedModelsList models={deployedModels} /> : <EmptyListComponent />}
-            <FeedbackComponent />
         </div>
     );
 }
