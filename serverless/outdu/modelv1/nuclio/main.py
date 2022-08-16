@@ -46,7 +46,7 @@ def init_context(context):
     context.logger.info("Init context...100%")
 
 def handler(context, event):
-    context.logger.info("Run pointrend-X101-FPN model")
+    context.logger.info("Run outdu model v1")
     data = event.body
     buf = io.BytesIO(base64.b64decode(data["image"]))
     threshold = float(data.get("threshold", 0.5))

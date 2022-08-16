@@ -132,6 +132,7 @@ spec:
       workerAvailabilityTimeoutMilliseconds: 10000
       attributes:
         maxRequestBodySize: 33554432 # 32MB
+        port: 32001
 
   resources:
     limits:
@@ -143,3 +144,4 @@ spec:
         name: always
         maximumRetryCount: 3
       mountMode: volume
+      network: outdu-cvat_cvat
