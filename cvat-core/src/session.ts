@@ -151,13 +151,14 @@
                         return result;
                     },
 
-                    async exportDataset(format, saveImages, customName = '') {
+                    async exportDataset(format, saveImages, customName = '', cloudStorageId=0) {
                         const result = await PluginRegistry.apiWrapper.call(
                             this,
                             prototype.annotations.exportDataset,
                             format,
                             saveImages,
                             customName,
+                            cloudStorageId,
                         );
                         return result;
                     },
@@ -2194,8 +2195,8 @@
         return result;
     };
 
-    Job.prototype.annotations.exportDataset.implementation = async function (format, saveImages, customName) {
-        const result = await exportDataset(this, format, customName, saveImages);
+    Job.prototype.annotations.exportDataset.implementation = async function (format, saveImages, customName, cloudStorageId=0) {
+        const result = await exportDataset(this, format, customName, saveImages, cloudStorageId);
         return result;
     };
 
@@ -2608,8 +2609,8 @@
         return result;
     };
 
-    Task.prototype.annotations.exportDataset.implementation = async function (format, saveImages, customName) {
-        const result = await exportDataset(this, format, customName, saveImages);
+    Task.prototype.annotations.exportDataset.implementation = async function (format, saveImages, customName, cloudStorageId=0) {
+        const result = await exportDataset(this, format, customName, saveImages, cloudStorageId);
         return result;
     };
 

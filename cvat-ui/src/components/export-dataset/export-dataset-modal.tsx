@@ -24,6 +24,7 @@ type FormValues = {
     selectedFormat: string | undefined;
     saveImages: boolean;
     customName: string | undefined;
+    cloudStorageId: number | undefined;
 };
 
 function ExportDatasetModal(): JSX.Element {
@@ -34,6 +35,7 @@ function ExportDatasetModal(): JSX.Element {
     const instance = useSelector((state: CombinedState) => state.export.instance);
     const modalVisible = useSelector((state: CombinedState) => state.export.modalVisible);
     const dumpers = useSelector((state: CombinedState) => state.formats.annotationFormats.dumpers);
+    const storages = useSelector((state: CombinedState) => state.cloudStorages.current);
     const { tasks: taskExportActivities, projects: projectExportActivities } = useSelector(
         (state: CombinedState) => state.export,
     );
@@ -66,12 +68,14 @@ function ExportDatasetModal(): JSX.Element {
     const handleExport = useCallback(
         (values: FormValues): void => {
             // have to validate format before so it would not be undefined
+            console.log("####export-dataset-model cloudStorageId=", values.cloudStorageId)
             dispatch(
                 exportDatasetAsync(
                     instance,
                     values.selectedFormat as string,
                     values.customName ? `${values.customName}.zip` : '',
                     values.saveImages,
+                    values.cloudStorageId,
                 ),
             );
             closeModal();
@@ -105,6 +109,7 @@ function ExportDatasetModal(): JSX.Element {
                         selectedFormat: undefined,
                         saveImages: false,
                         customName: undefined,
+                        cloudStorageId: undefined,
                     } as FormValues
                 }
                 onFinish={handleExport}
@@ -147,6 +152,38 @@ function ExportDatasetModal(): JSX.Element {
                         suffix='.zip'
                         className='cvat-modal-export-filename-input'
                     />
+                </Form.Item>
+                <Form.Item
+                    name='cloudStorageId'
+                    label='CloudStorage'
+                    rules={[{ required: true, message: 'A bucket must be selected' }]} 
+                >
+                <Select virtual={false} placeholder='Select a bucket' className='cvat-modal-export-select'>
+                        {storages
+                            // .sort((a: any, b: any) => a.name.localeCompare(b.name))
+                            // .filter((storage: any): boolean => storage.dimension === instance?.dimension)
+                            .map(
+                                (storage: any): JSX.Element => {
+                                    const pending = (activities || []).includes(storage.displayName);
+                                    // const disabled = !storage.enabled || pending;
+                                    const disabled = false;
+                                    return (
+                                        <Select.Option
+                                            value={storage.id}
+                                            key={storage.displayName}
+                                            disabled={disabled}
+                                            className='cvat-modal-export-option-item'
+                                        >
+                                            <DownloadOutlined />
+                                            <Text disabled={disabled}>{storage.displayName}</Text>
+                                            {pending && <LoadingOutlined style={{ marginLeft: 10 }} />}
+                                        </Select.Option>
+                                    );
+                                },
+                            )}
+                    </Select>
+
+                    
                 </Form.Item>
             </Form>
         </Modal>

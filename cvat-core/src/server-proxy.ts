@@ -581,7 +581,7 @@
             }
 
             function exportDataset(instanceType) {
-                return async function (id, format, name, saveImages) {
+                return async function (id, format, name, saveImages, cloudStorageId=0) {
                     const { backendAPI } = config;
                     const baseURL = `${backendAPI}/${instanceType}/${id}/${saveImages ? 'dataset' : 'annotations'}`;
                     const params = {
@@ -592,6 +592,12 @@
                     if (name) {
                         params.filename = name.replace(/\//g, '_');
                     }
+                    if (cloudStorageId!=0) {
+                        params.location="cloud_storage"
+                        params.use_default_location="False"
+                        params.cloud_storage_id=cloudStorageId
+                    }
+                    
 
                     return new Promise((resolve, reject) => {
                         async function request() {

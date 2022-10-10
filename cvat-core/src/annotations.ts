@@ -258,7 +258,7 @@
         );
     }
 
-    async function exportDataset(instance, format, name, saveImages = false) {
+    async function exportDataset(instance, format, name, saveImages = false, cloudStorageId=0) {
         if (!(format instanceof String || typeof format === 'string')) {
             throw new ArgumentError('Format must be a string');
         }
@@ -271,11 +271,11 @@
 
         let result = null;
         if (instance instanceof Task) {
-            result = await serverProxy.tasks.exportDataset(instance.id, format, name, saveImages);
+            result = await serverProxy.tasks.exportDataset(instance.id, format, name, saveImages, cloudStorageId);
         } else if (instance instanceof Job) {
-            result = await serverProxy.tasks.exportDataset(instance.taskId, format, name, saveImages);
+            result = await serverProxy.tasks.exportDataset(instance.taskId, format, name, saveImages, cloudStorageId);
         } else {
-            result = await serverProxy.projects.exportDataset(instance.id, format, name, saveImages);
+            result = await serverProxy.projects.exportDataset(instance.id, format, name, saveImages, cloudStorageId);
         }
 
         return result;

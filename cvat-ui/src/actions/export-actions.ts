@@ -35,14 +35,17 @@ export const exportDatasetAsync = (
     format: string,
     name: string,
     saveImages: boolean,
+    cloudStorageId: number,
 ): ThunkAction => async (dispatch) => {
     dispatch(exportActions.exportDataset(instance, format));
-
+    console.log("####export-actions cloudStorageId=", cloudStorageId)
     try {
-        const url = await instance.annotations.exportDataset(format, saveImages, name);
-        const downloadAnchor = window.document.getElementById('downloadAnchor') as HTMLAnchorElement;
-        downloadAnchor.href = url;
-        downloadAnchor.click();
+        const url = await instance.annotations.exportDataset(format, saveImages, name, cloudStorageId);
+        const response = await fetch(url);
+        console.log("##response=",response)
+        // const downloadAnchor = window.document.getElementById('downloadAnchor') as HTMLAnchorElement;
+        // downloadAnchor.href = url;
+        // downloadAnchor.click();
         dispatch(exportActions.exportDatasetSuccess(instance, format));
     } catch (error) {
         dispatch(exportActions.exportDatasetFailed(instance, format, error));
