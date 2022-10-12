@@ -16,6 +16,7 @@ import Form from 'antd/lib/form';
 
 import { CombinedState } from 'reducers/interfaces';
 import { exportActions, exportDatasetAsync } from 'actions/export-actions';
+import { getCloudStoragesAsync } from 'actions/cloud-storage-actions';
 import getCore from 'cvat-core-wrapper';
 
 const core = getCore();
@@ -39,6 +40,10 @@ function ExportDatasetModal(): JSX.Element {
     const { tasks: taskExportActivities, projects: projectExportActivities } = useSelector(
         (state: CombinedState) => state.export,
     );
+    const query = useSelector((state: CombinedState) => state.cloudStorages.gettingQuery);
+    useEffect(() => {
+        dispatch(getCloudStoragesAsync({ ...query }));
+    }, []);
 
     const initActivities = (): void => {
         if (instance instanceof core.classes.Project) {
