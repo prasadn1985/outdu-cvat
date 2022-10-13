@@ -70,6 +70,26 @@
         }
     }
 
+    async function propagateAttributes(session, fromPoints, fromAttributes, fromFrame, toFrame) {
+        // console.log("##annotations propagateAttributes", fromPoints, fromAttributes, fromFrame, toFrame);
+        const sessionType = session instanceof Task ? 'task' : 'job';
+        const cache = getCache(sessionType);
+
+        if (cache.has(session)) {
+            cache.get(session).collection.propagateAttributes(fromPoints, fromAttributes, fromFrame, toFrame);
+        }
+    }
+
+    async function carryForwardAttributes(session, toFrame) {
+        // console.log("##annotations carryForwardAttributes", toFrame);
+        const sessionType = session instanceof Task ? 'task' : 'job';
+        const cache = getCache(sessionType);
+
+        if (cache.has(session)) {
+            cache.get(session).collection.carryForwardAttributes(toFrame);
+        }
+    }
+
     async function getAnnotations(session, frame, allTracks, filters) {
         const sessionType = session instanceof Task ? 'task' : 'job';
         const cache = getCache(sessionType);
@@ -377,6 +397,8 @@
 
     module.exports = {
         getAnnotations,
+        carryForwardAttributes,
+        propagateAttributes,
         putAnnotations,
         saveAnnotations,
         hasUnsavedChanges,

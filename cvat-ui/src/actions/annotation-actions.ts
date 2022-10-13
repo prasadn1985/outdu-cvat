@@ -464,7 +464,9 @@ export function showFilters(visible: boolean): AnyAction {
 export function propagateObjectAsync(sessionInstance: any, objectState: any, from: number, to: number): ThunkAction {
     return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
         try {
-            const copy = {
+            await sessionInstance.annotations.propagateAttributes(objectState.points, objectState.attributes, from, to);
+            
+            /*const copy = {
                 attributes: objectState.attributes,
                 points: objectState.points,
                 occluded: objectState.occluded,
@@ -484,7 +486,7 @@ export function propagateObjectAsync(sessionInstance: any, objectState: any, fro
                 states.push(newState);
             }
 
-            await sessionInstance.annotations.put(states);
+            await sessionInstance.annotations.put(states);*/
             const history = await sessionInstance.actions.get();
 
             dispatch({

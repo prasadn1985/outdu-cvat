@@ -69,6 +69,25 @@
                         return result;
                     },
 
+                    async propagateAttributes(fromPoints,fromAttributes,fromFrame,toFrame) {
+                        await PluginRegistry.apiWrapper.call(
+                            this,
+                            prototype.annotations.propagateAttributes,
+                            fromPoints, 
+                            fromAttributes,
+                            fromFrame,
+                            toFrame,
+                        );
+                    },
+
+                    async carryForwardAttributes(toFrame) {
+                        await PluginRegistry.apiWrapper.call(
+                            this,
+                            prototype.annotations.carryForwardAttributes,
+                            toFrame,
+                        );
+                    },
+
                     async get(frame, allTracks = false, filters = []) {
                         const result = await PluginRegistry.apiWrapper.call(
                             this,
@@ -1045,6 +1064,8 @@
             // So, we need return it
             this.annotations = {
                 get: Object.getPrototypeOf(this).annotations.get.bind(this),
+                propagateAttributes: Object.getPrototypeOf(this).annotations.propagateAttributes.bind(this),
+                carryForwardAttributes: Object.getPrototypeOf(this).annotations.carryForwardAttributes.bind(this),
                 put: Object.getPrototypeOf(this).annotations.put.bind(this),
                 save: Object.getPrototypeOf(this).annotations.save.bind(this),
                 merge: Object.getPrototypeOf(this).annotations.merge.bind(this),
@@ -1896,6 +1917,8 @@
 
     const {
         getAnnotations,
+        propagateAttributes,
+        carryForwardAttributes,
         putAnnotations,
         saveAnnotations,
         hasUnsavedChanges,
@@ -2070,6 +2093,16 @@
             return findNotDeletedFrame(this.id, frameFrom, frameTo, filters.offset || 1);
         }
         return null;
+    };
+
+    Job.prototype.annotations.propagateAttributes.implementation = async function (fromPoints, fromAttributes, fromFrame, toFrame) {
+        // console.log("##session propagateAttributes", fromPoints, fromAttributes, fromFrame, toFrame);
+        await propagateAttributes(this, fromPoints, fromAttributes, fromFrame, toFrame);
+    };
+
+    Job.prototype.annotations.carryForwardAttributes.implementation = async function (toFrame) {
+        // console.log("##session carryForwardAttributes", toFrame);
+        await carryForwardAttributes(this, toFrame);
     };
 
     // TODO: Check filter for annotations

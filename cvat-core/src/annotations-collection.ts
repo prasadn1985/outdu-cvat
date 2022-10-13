@@ -99,6 +99,27 @@
         return null;
     }
 
+    function fn_overlap_area(points1, points2) {
+        let l1_x=points1[0];
+        let l1_y=points1[1];
+        let r1_x=points1[2];
+        let r1_y=points1[3];
+        let l2_x=points2[0];
+        let l2_y=points2[1];
+        let r2_x=points2[2];
+        let r2_y=points2[3];
+
+        let area1 = Math.abs(l1_x - r1_x) * Math.abs(l1_y - r1_y)
+
+        let x_dist = (Math.min(r1_x, r2_x)-Math.max(l1_x, l2_x));
+        let y_dist = (Math.min(r1_y, r2_y)-Math.max(l1_y, l2_y));
+        let areaI = 0;
+        if (x_dist > 0 && y_dist > 0)
+            areaI = x_dist * y_dist;
+            return areaI*1.0/area1;
+        return 0;
+    }
+
     class Collection {
         constructor(data) {
             this.startFrame = data.startFrame;
@@ -194,6 +215,40 @@
             };
 
             return data;
+        }
+
+        propagateAttributes(fromPoints, fromAttributes, fromFrame, toFrame) {
+            // console.log("##collections propagateAttributes", fromPoints, fromAttributes, fromFrame, toFrame);
+            let latestPoints=fromPoints;
+            for (let frame = fromFrame; frame <= toFrame; frame++) {
+                let numberOfOverlapedObjs=0;
+                const toFrameObjs=this.shapes[frame];
+                for(const toFrameObj of toFrameObjs) {
+                    let overlap_area=fn_overlap_area(latestPoints, toFrameObj.points);
+                    if(overlap_area>=0.8) {
+                        numberOfOverlapedObjs++;
+                        toFrameObj.attributes=fromAttributes;
+                        latestPoints=toFrameObj.points;
+                    }
+                }
+                if(numberOfOverlapedObjs!=1) {
+                     throw new DataError(`Could not propagate annotations to the frame "${frame}",please check.`);
+                }
+            }
+        }
+
+        carryForwardAttributes(toFrame) {
+            // console.log("##collections carryForwardAttributes", toFrame);
+            const toFrameObjs=this.shapes[toFrame];
+            const fromFrameObjs=this.shapes[toFrame-1];
+            for(const fromFrameObj of fromFrameObjs) {
+                for(const toFrameObj of toFrameObjs) {
+                    let overlap_area=fn_overlap_area(fromFrameObj.points, toFrameObj.points);
+                    if(overlap_area>0.8) {
+                        toFrameObj.attributes=fromFrameObj.attributes;
+                    }
+                }
+            }
         }
 
         get(frame, allTracks, filters) {
