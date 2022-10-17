@@ -36,11 +36,13 @@ export const exportDatasetAsync = (
     name: string,
     saveImages: boolean,
     cloudStorageId: number,
+    cloudStorageDir: string,
 ): ThunkAction => async (dispatch) => {
     dispatch(exportActions.exportDataset(instance, format));
     console.log("####export-actions cloudStorageId=", cloudStorageId)
+    console.log("####export-actions cloudStorageDir=", cloudStorageDir)
     try {
-        const url = await instance.annotations.exportDataset(format, saveImages, name, cloudStorageId);
+        const url = await instance.annotations.exportDataset(format, saveImages, name, cloudStorageId, cloudStorageDir);
         const response = await fetch(url);
         console.log("##response=",response)
         // const downloadAnchor = window.document.getElementById('downloadAnchor') as HTMLAnchorElement;

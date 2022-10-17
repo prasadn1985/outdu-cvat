@@ -217,7 +217,7 @@
             return data;
         }
 
-        propagateAttributes(fromPoints, fromAttributes, fromFrame, toFrame) {
+        propagateAttributes(fromPoints, fromAttributes, fromID, fromFrame, toFrame) {
             // console.log("##collections propagateAttributes", fromPoints, fromAttributes, fromFrame, toFrame);
             let latestPoints=fromPoints;
             for (let frame = fromFrame; frame <= toFrame; frame++) {
@@ -225,14 +225,19 @@
                 const toFrameObjs=this.shapes[frame];
                 for(const toFrameObj of toFrameObjs) {
                     let overlap_area=fn_overlap_area(latestPoints, toFrameObj.points);
-                    if(overlap_area>=0.8) {
+                    if(overlap_area>=0.6) {
                         numberOfOverlapedObjs++;
-                        toFrameObj.attributes=fromAttributes;
+                        // toFrameObj.clientID=fromID;
+                        console.log("fromAttributes=",fromAttributes);
+                        for (const attrID in fromAttributes) {
+                            toFrameObj.attributes[attrID] = fromAttributes[attrID];
+                        }
+                        // toFrameObj.attributes=fromAttributes;
                         latestPoints=toFrameObj.points;
                     }
                 }
                 if(numberOfOverlapedObjs!=1) {
-                     throw new DataError(`Could not propagate annotations to the frame "${frame}",please check.`);
+                     throw new DataError(`Could not propagate the annotations to frame "${frame}",please check.`);
                 }
             }
         }
@@ -244,7 +249,7 @@
             for(const fromFrameObj of fromFrameObjs) {
                 for(const toFrameObj of toFrameObjs) {
                     let overlap_area=fn_overlap_area(fromFrameObj.points, toFrameObj.points);
-                    if(overlap_area>0.8) {
+                    if(overlap_area>=0.6) {
                         toFrameObj.attributes=fromFrameObj.attributes;
                     }
                 }

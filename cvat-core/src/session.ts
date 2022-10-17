@@ -69,12 +69,13 @@
                         return result;
                     },
 
-                    async propagateAttributes(fromPoints,fromAttributes,fromFrame,toFrame) {
+                    async propagateAttributes(fromPoints,fromAttributes,fromID,fromFrame,toFrame) {
                         await PluginRegistry.apiWrapper.call(
                             this,
                             prototype.annotations.propagateAttributes,
                             fromPoints, 
                             fromAttributes,
+                            fromID,
                             fromFrame,
                             toFrame,
                         );
@@ -170,7 +171,7 @@
                         return result;
                     },
 
-                    async exportDataset(format, saveImages, customName = '', cloudStorageId=0) {
+                    async exportDataset(format, saveImages, customName = '', cloudStorageId=0, cloudStorageDir) {
                         const result = await PluginRegistry.apiWrapper.call(
                             this,
                             prototype.annotations.exportDataset,
@@ -178,6 +179,7 @@
                             saveImages,
                             customName,
                             cloudStorageId,
+                            cloudStorageDir,
                         );
                         return result;
                     },
@@ -2095,9 +2097,9 @@
         return null;
     };
 
-    Job.prototype.annotations.propagateAttributes.implementation = async function (fromPoints, fromAttributes, fromFrame, toFrame) {
-        // console.log("##session propagateAttributes", fromPoints, fromAttributes, fromFrame, toFrame);
-        await propagateAttributes(this, fromPoints, fromAttributes, fromFrame, toFrame);
+    Job.prototype.annotations.propagateAttributes.implementation = async function (fromPoints, fromAttributes, fromID, fromFrame, toFrame) {
+        // console.log("##session propagateAttributes", fromPoints, fromAttributes, fromID, fromFrame, toFrame);
+        await propagateAttributes(this, fromPoints, fromAttributes, fromID, fromFrame, toFrame);
     };
 
     Job.prototype.annotations.carryForwardAttributes.implementation = async function (toFrame) {
@@ -2228,8 +2230,8 @@
         return result;
     };
 
-    Job.prototype.annotations.exportDataset.implementation = async function (format, saveImages, customName, cloudStorageId=0) {
-        const result = await exportDataset(this, format, customName, saveImages, cloudStorageId);
+    Job.prototype.annotations.exportDataset.implementation = async function (format, saveImages, customName, cloudStorageId=0, cloudStorageDir) {
+        const result = await exportDataset(this, format, customName, saveImages, cloudStorageId, cloudStorageDir);
         return result;
     };
 
@@ -2642,8 +2644,8 @@
         return result;
     };
 
-    Task.prototype.annotations.exportDataset.implementation = async function (format, saveImages, customName, cloudStorageId=0) {
-        const result = await exportDataset(this, format, customName, saveImages, cloudStorageId);
+    Task.prototype.annotations.exportDataset.implementation = async function (format, saveImages, customName, cloudStorageId=0, cloudStorageDir) {
+        const result = await exportDataset(this, format, customName, saveImages, cloudStorageId, cloudStorageDir);
         return result;
     };
 

@@ -65,8 +65,9 @@
             saveImages,
             customName,
             cloudStorageId,
+            cloudStorageDir,
         ) {
-            const result = exportDataset(this, format, customName, saveImages, cloudStorageId);
+            const result = exportDataset(this, format, customName, saveImages, cloudStorageId, cloudStorageDir);
             return result;
         };
         projectClass.prototype.annotations.importDataset.implementation = async function (

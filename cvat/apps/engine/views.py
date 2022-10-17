@@ -2192,6 +2192,10 @@ def _export_annotations(db_instance, rq_id, request, format_name, action, callba
                             db_instance.name if isinstance(db_instance, (Task, Project)) else db_instance.id,
                             timestamp, format_name, osp.splitext(file_path)[1]
                         )
+                        
+                    cloudStorageDir = request.query_params.get("cloud_storage_dir", "")
+                    if cloudStorageDir != "" and cloudStorageDir != "/":
+                        filename = cloudStorageDir+"/"+filename
 
                     # save annotation to specified location
                     location = location_conf.get('location')

@@ -344,7 +344,7 @@
         Object.freeze({
             annotations: Object.freeze({
                 value: {
-                    async exportDataset(format, saveImages, customName = '', cloudStorageId=0) {
+                    async exportDataset(format, saveImages, customName = '', cloudStorageId=0, cloudStorageDir) {
                         const result = await PluginRegistry.apiWrapper.call(
                             this,
                             Project.prototype.annotations.exportDataset,
@@ -352,6 +352,7 @@
                             saveImages,
                             customName,
                             cloudStorageId,
+                            cloudStorageDir,
                         );
                         return result;
                     },

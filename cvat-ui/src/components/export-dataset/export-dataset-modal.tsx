@@ -26,11 +26,13 @@ type FormValues = {
     saveImages: boolean;
     customName: string | undefined;
     cloudStorageId: number | undefined;
+    cloudStorageDir: string | undefined;
 };
 
 function ExportDatasetModal(): JSX.Element {
     const [instanceType, setInstanceType] = useState('');
     const [activities, setActivities] = useState<string[]>([]);
+    const [manifestPaths, setManifestPaths] = useState<string[]>([]);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const instance = useSelector((state: CombinedState) => state.export.instance);
@@ -45,6 +47,7 @@ function ExportDatasetModal(): JSX.Element {
         dispatch(getCloudStoragesAsync({ ...query }));
     }, []);
 
+    console.log("storages=",storages);
     const initActivities = (): void => {
         if (instance instanceof core.classes.Project) {
             setInstanceType(`project #${instance.id}`);
@@ -81,6 +84,7 @@ function ExportDatasetModal(): JSX.Element {
                     values.customName ? `${values.customName}.zip` : '',
                     values.saveImages,
                     values.cloudStorageId,
+                    values.cloudStorageDir,
                 ),
             );
             closeModal();
@@ -94,6 +98,21 @@ function ExportDatasetModal(): JSX.Element {
         },
         [instance, instanceType],
     );
+
+    const cloudStorageChangeHandler = cloudStorageId => {
+        console.log("###cloudStorageChange=",cloudStorageId);
+        const result_storage = storages.find(obj => {
+            return obj.id === cloudStorageId;
+        });
+        console.log("result_storage=", result_storage);
+        let manifest_paths=[];
+        manifest_paths.push("/");
+        for(let manifest_path of result_storage.manifests) {
+            manifest_paths.push(manifest_path.substring(0, manifest_path.lastIndexOf("/")));
+        }
+        console.log("manifest_paths=", manifest_paths);
+        setManifestPaths(manifest_paths);
+    }
 
     return (
         <Modal
@@ -115,6 +134,7 @@ function ExportDatasetModal(): JSX.Element {
                         saveImages: false,
                         customName: undefined,
                         cloudStorageId: undefined,
+                        cloudStorageDir: undefined,
                     } as FormValues
                 }
                 onFinish={handleExport}
@@ -163,7 +183,8 @@ function ExportDatasetModal(): JSX.Element {
                     label='CloudStorage'
                     rules={[{ required: true, message: 'A bucket must be selected' }]} 
                 >
-                <Select virtual={false} placeholder='Select a bucket' className='cvat-modal-export-select'>
+                <Select virtual={false} placeholder='Select a bucket' 
+                className='cvat-modal-export-select' onChange={cloudStorageChangeHandler}>
                         {storages
                             // .sort((a: any, b: any) => a.name.localeCompare(b.name))
                             // .filter((storage: any): boolean => storage.dimension === instance?.dimension)
@@ -186,9 +207,34 @@ function ExportDatasetModal(): JSX.Element {
                                     );
                                 },
                             )}
+                    </Select>                
+                </Form.Item>
+                <Form.Item
+                    name='cloudStorageDir'
+                    label='CloudStorageDir'
+                    rules={[{ required: true, message: 'A directory must be selected' }]} 
+                >
+                <Select virtual={false} placeholder='Select a directory' 
+                className='cvat-modal-export-select'>
+                        {manifestPaths
+                            .map(
+                                (manifest_path: any): JSX.Element => {
+                                    const disabled = false;
+                                    return (
+                                        <Select.Option
+                                            value={manifest_path}
+                                            key={manifest_path}
+                                            disabled={disabled}
+                                            className='cvat-modal-export-option-item'
+                                        >
+                                            <DownloadOutlined />
+                                            <Text disabled={disabled}>{manifest_path}</Text>
+                                        </Select.Option>
+                                    );
+                                },
+                            )}
                     </Select>
-
-                    
+                
                 </Form.Item>
             </Form>
         </Modal>

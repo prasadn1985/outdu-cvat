@@ -70,13 +70,13 @@
         }
     }
 
-    async function propagateAttributes(session, fromPoints, fromAttributes, fromFrame, toFrame) {
-        // console.log("##annotations propagateAttributes", fromPoints, fromAttributes, fromFrame, toFrame);
+    async function propagateAttributes(session, fromPoints, fromAttributes, fromID, fromFrame, toFrame) {
+        // console.log("##annotations propagateAttributes", fromPoints, fromAttributes, fromID, fromFrame, toFrame);
         const sessionType = session instanceof Task ? 'task' : 'job';
         const cache = getCache(sessionType);
 
         if (cache.has(session)) {
-            cache.get(session).collection.propagateAttributes(fromPoints, fromAttributes, fromFrame, toFrame);
+            cache.get(session).collection.propagateAttributes(fromPoints, fromAttributes, fromID, fromFrame, toFrame);
         }
     }
 
@@ -278,7 +278,7 @@
         );
     }
 
-    async function exportDataset(instance, format, name, saveImages = false, cloudStorageId=0) {
+    async function exportDataset(instance, format, name, saveImages = false, cloudStorageId=0, cloudStorageDir) {
         if (!(format instanceof String || typeof format === 'string')) {
             throw new ArgumentError('Format must be a string');
         }
@@ -288,14 +288,17 @@
         if (typeof saveImages !== 'boolean') {
             throw new ArgumentError('Save images parameter must be a boolean');
         }
+        if (!(cloudStorageDir instanceof String || typeof cloudStorageDir === 'string')) {
+            throw new ArgumentError('CloudStorageDir must be a string');
+        }
 
         let result = null;
         if (instance instanceof Task) {
-            result = await serverProxy.tasks.exportDataset(instance.id, format, name, saveImages, cloudStorageId);
+            result = await serverProxy.tasks.exportDataset(instance.id, format, name, saveImages, cloudStorageId, cloudStorageDir);
         } else if (instance instanceof Job) {
-            result = await serverProxy.tasks.exportDataset(instance.taskId, format, name, saveImages, cloudStorageId);
+            result = await serverProxy.tasks.exportDataset(instance.taskId, format, name, saveImages, cloudStorageId, cloudStorageDir);
         } else {
-            result = await serverProxy.projects.exportDataset(instance.id, format, name, saveImages, cloudStorageId);
+            result = await serverProxy.projects.exportDataset(instance.id, format, name, saveImages, cloudStorageId, cloudStorageDir);
         }
 
         return result;
