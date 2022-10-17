@@ -69,13 +69,12 @@
                         return result;
                     },
 
-                    async propagateAttributes(fromPoints,fromAttributes,fromID,fromFrame,toFrame) {
+                    async propagateAttributes(fromPoints,fromAttributes,fromFrame,toFrame) {
                         await PluginRegistry.apiWrapper.call(
                             this,
                             prototype.annotations.propagateAttributes,
                             fromPoints, 
                             fromAttributes,
-                            fromID,
                             fromFrame,
                             toFrame,
                         );
@@ -2097,9 +2096,9 @@
         return null;
     };
 
-    Job.prototype.annotations.propagateAttributes.implementation = async function (fromPoints, fromAttributes, fromID, fromFrame, toFrame) {
-        // console.log("##session propagateAttributes", fromPoints, fromAttributes, fromID, fromFrame, toFrame);
-        await propagateAttributes(this, fromPoints, fromAttributes, fromID, fromFrame, toFrame);
+    Job.prototype.annotations.propagateAttributes.implementation = async function (fromPoints, fromAttributes, fromFrame, toFrame) {
+        // console.log("##session propagateAttributes", fromPoints, fromAttributes, fromFrame, toFrame);
+        await propagateAttributes(this, fromPoints, fromAttributes, fromFrame, toFrame);
     };
 
     Job.prototype.annotations.carryForwardAttributes.implementation = async function (toFrame) {

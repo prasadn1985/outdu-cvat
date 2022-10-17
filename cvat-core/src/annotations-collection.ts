@@ -217,7 +217,7 @@
             return data;
         }
 
-        propagateAttributes(fromPoints, fromAttributes, fromID, fromFrame, toFrame) {
+        propagateAttributes(fromPoints, fromAttributes, fromFrame, toFrame) {
             // console.log("##collections propagateAttributes", fromPoints, fromAttributes, fromFrame, toFrame);
             let latestPoints=fromPoints;
             for (let frame = fromFrame; frame <= toFrame; frame++) {
@@ -227,7 +227,6 @@
                     let overlap_area=fn_overlap_area(latestPoints, toFrameObj.points);
                     if(overlap_area>=0.6) {
                         numberOfOverlapedObjs++;
-                        // toFrameObj.clientID=fromID;
                         console.log("fromAttributes=",fromAttributes);
                         for (const attrID in fromAttributes) {
                             toFrameObj.attributes[attrID] = fromAttributes[attrID];

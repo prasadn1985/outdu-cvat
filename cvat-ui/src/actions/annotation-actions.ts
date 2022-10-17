@@ -464,7 +464,7 @@ export function showFilters(visible: boolean): AnyAction {
 export function propagateObjectAsync(sessionInstance: any, objectState: any, from: number, to: number): ThunkAction {
     return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
         try {
-            await sessionInstance.annotations.propagateAttributes(objectState.points, objectState.attributes, objectState.clientID, from, to);
+            await sessionInstance.annotations.propagateAttributes(objectState.points, objectState.attributes, from, to);
             
             /*const copy = {
                 attributes: objectState.attributes,

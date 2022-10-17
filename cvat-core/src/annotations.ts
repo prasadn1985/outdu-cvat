@@ -70,13 +70,13 @@
         }
     }
 
-    async function propagateAttributes(session, fromPoints, fromAttributes, fromID, fromFrame, toFrame) {
-        // console.log("##annotations propagateAttributes", fromPoints, fromAttributes, fromID, fromFrame, toFrame);
+    async function propagateAttributes(session, fromPoints, fromAttributes, fromFrame, toFrame) {
+        // console.log("##annotations propagateAttributes", fromPoints, fromAttributes, fromFrame, toFrame);
         const sessionType = session instanceof Task ? 'task' : 'job';
         const cache = getCache(sessionType);
 
         if (cache.has(session)) {
-            cache.get(session).collection.propagateAttributes(fromPoints, fromAttributes, fromID, fromFrame, toFrame);
+            cache.get(session).collection.propagateAttributes(fromPoints, fromAttributes, fromFrame, toFrame);
         }
     }
 
