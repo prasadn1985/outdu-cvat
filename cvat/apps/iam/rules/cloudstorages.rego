@@ -36,18 +36,18 @@ allow {
     utils.is_admin
 }
 
-allow {
-    input.scope == utils.CREATE
-    utils.has_perm(utils.USER)
-    utils.is_sandbox
-}
+#allow {
+#    input.scope == utils.CREATE
+#    utils.has_perm(utils.USER)
+#    utils.is_sandbox
+#}
 
-allow {
-    input.scope == utils.CREATE
-    input.auth.organization.id == input.resource.organization.id
-    utils.has_perm(utils.USER)
-    organizations.has_perm(organizations.MAINTAINER)
-}
+#allow {
+#    input.scope == utils.CREATE
+#    input.auth.organization.id == input.resource.organization.id
+#    utils.has_perm(utils.USER)
+#    organizations.has_perm(organizations.MAINTAINER)
+#}
 
 allow {
     input.scope == utils.LIST

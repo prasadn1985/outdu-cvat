@@ -26,6 +26,10 @@ allow {
 }
 
 allow {
+    utils.is_worker
+}
+
+allow {
     input.scope == utils.LIST
 }
 
@@ -40,5 +44,5 @@ allow {
 
 allow {
     input.scope == utils.CALL_OFFLINE
-    utils.has_perm(utils.BUSINESS)
+    utils.has_perm(utils.WORKER)
 }

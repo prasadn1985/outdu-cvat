@@ -44,7 +44,7 @@ function LoginPageComponent(props: LoginPageComponentProps & RouteComponentProps
                                 onLogin(loginData.username, loginData.password);
                             }}
                         />
-                        <Row justify='start' align='top'>
+                        {/* <Row justify='start' align='top'>
                             <Col>
                                 <Text strong>
                                     New to CVAT? Create
@@ -60,7 +60,7 @@ function LoginPageComponent(props: LoginPageComponentProps & RouteComponentProps
                                     </Text>
                                 </Col>
                             </Row>
-                        )}
+                        )} */}
                     </Col>
                 </Row>
             </Content>

@@ -254,10 +254,10 @@ function HeaderContainer(props: Props): JSX.Element {
                     onClick={(): void => {
                         // false positive
                         // eslint-disable-next-line
-                        window.open(`${tool.server.host}/admin`, '_blank');
+                        // window.open(`${tool.server.host}/admin`, '_blank');
                     }}
                 >
-                    Admin page
+                    Admin
                 </Menu.Item>
             )}
             <Menu.SubMenu
@@ -345,18 +345,6 @@ function HeaderContainer(props: Props): JSX.Element {
             >
                 Settings
             </Menu.Item>
-            {renderChangePasswordItem && (
-                <Menu.Item
-                    key='change_password'
-                    icon={changePasswordFetching ? <LoadingOutlined /> : <EditOutlined />}
-                    className='cvat-header-menu-change-password'
-                    onClick={(): void => switchChangePasswordDialog(true)}
-                    disabled={changePasswordFetching}
-                >
-                    Change password
-                </Menu.Item>
-            )}
-
             <Menu.Item
                 key='logout'
                 icon={logoutFetching ? <LoadingOutlined /> : <LogoutOutlined />}
