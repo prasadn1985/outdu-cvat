@@ -219,12 +219,8 @@ export class FileManager extends React.PureComponent<Props, State> {
                 ) : (
                     <div className='cvat-empty-share-tree'>
                         <Empty />
-                        <Paragraph className='cvat-text-color'>
-                            Please, be sure you had
-                            <Text strong>
-                                <a href={SHARE_MOUNT_GUIDE_URL}> mounted </a>
-                            </Text>
-                            share before you built CVAT and the shared storage contains files
+                        <Paragraph className='ant-upload-hint'>
+                            Please, be sure you had mounted share before you built CVAT and the shared storage contains files
                         </Paragraph>
                     </div>
                 )}
